@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://camboim123.github.io/be-on-eventos/sitemap.xml
