@@ -100,6 +100,7 @@ function copyCode(){
   document.getElementById('nextMeta').textContent = pick.querySelector('.event-meta').textContent;
 
   var nextBuy = document.getElementById('nextBuy');
+  nextBuy.setAttribute('data-id', pick.getAttribute('data-id'));
   var cardBtn = pick.querySelector('.buy-btn');
   if(pick.hasAttribute('data-soldout')){
     nextBuy.textContent = 'SOLD OUT'; nextBuy.classList.add('soldout');
@@ -308,3 +309,55 @@ document.querySelectorAll('.faq-q').forEach(function(btn){
     btn.setAttribute('aria-expanded', String(!isOpen));
   });
 });
+
+// Estatísticas de acesso (GoatCounter): visitas + cliques importantes, para o painel local.
+// Só liga quando "goatcounter" estiver preenchido no beon-data (ex.: "beon-thiago"). Não usa cookies.
+(function(){
+  var code = (BEON.site.goatcounter || '').trim();
+  if(!code) return;
+  var queue = [];
+  function send(path, title){
+    if(window.goatcounter && window.goatcounter.count){
+      window.goatcounter.count({path: path, title: title || path, event: true});
+    } else { queue.push([path, title]); }
+  }
+  var s = document.createElement('script');
+  s.async = true; s.src = 'https://gc.zgo.at/count.js';
+  s.setAttribute('data-goatcounter', 'https://' + code + '.goatcounter.com/count');
+  s.onload = function(){
+    // count.js conta a visita sozinho; aqui só enviamos os cliques que aconteceram antes de carregar
+    var wait = setInterval(function(){
+      if(!(window.goatcounter && window.goatcounter.count)) return;
+      clearInterval(wait);
+      queue.splice(0).forEach(function(q){ send(q[0], q[1]); });
+    }, 200);
+  };
+  document.head.appendChild(s);
+
+  function eventId(el){
+    var card = el.closest('.event-card');
+    if(card) return card.getAttribute('data-id');
+    var nb = el.closest('#nextBuy');
+    return nb ? (nb.getAttribute('data-id') || 'destaque') : '';
+  }
+
+  document.addEventListener('click', function(e){
+    var el = e.target.closest && e.target.closest('a, button');
+    if(!el) return;
+    var id = eventId(el), href = el.getAttribute('href') || '';
+    if(el.matches('a.buy-btn') && !/wa\.me/.test(href)){
+      send('clique/comprar/' + id, 'Comprar: ' + id);
+    } else if(el.closest('.card-actions')){
+      send((el.tagName === 'BUTTON' ? 'clique/compartilhar/' : 'clique/agenda/') + id,
+           (el.tagName === 'BUTTON' ? 'Compartilhar: ' : 'Agenda: ') + id);
+    } else if(/wa\.me\/55/.test(href)){
+      send('clique/whatsapp/' + (id || el.id || 'pagina'), 'WhatsApp');
+    } else if(/instagram\.com/.test(href)){
+      send('clique/instagram', 'Instagram');
+    } else if(el.id === 'copyBtn'){
+      send('clique/copiar-cupom', 'Copiar cupom');
+    } else if(el.matches('.fav-btn') && el.getAttribute('aria-pressed') !== 'true'){
+      send('clique/favoritar/' + id, 'Favoritar: ' + id);
+    }
+  }, true);
+})();
