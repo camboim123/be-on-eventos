@@ -26,6 +26,7 @@ Responda sempre em português do Brasil, de forma simples e direta. O Thiago nã
    - Opcionais: `time` (HH:MM), `end` (AAAA-MM-DDTHH:MM), `horario` (ex.: "23h às 7h"), `address`, `badgeMode` (`default` | `custom` | `soldout`), `badgeText`, `buyLabel`, `cta`, `keywords`, `ldName`, `ldDescShort`.
    - O `buyHref` precisa levar o cupom (`?coupon=THIAGOCAMBOIM` ou `?passkey=THIAGOCAMBOIM`). Se o link vier sem cupom, avise o Thiago.
    - Artes novas: converta para `.webp` com até ~800 px de altura e preencha `imgW`/`imgH` com o tamanho real.
+   - **Não apague eventos que já aconteceram.** Eles vão sozinhos para a aba "Eventos passados". Só remova um evento se o Thiago pedir.
 2. **Não invente informação.** Datas, locais, line-up, preços e links vêm do Thiago ou da página oficial do evento. Se faltar algo, pergunte.
 3. **Confira antes de entregar.** Abra o site localmente: um servidor estático na pasta do projeto, testado no navegador em largura de desktop e de celular (375 px). Veja se não há erros no console nem rolagem horizontal.
 4. **Git:**

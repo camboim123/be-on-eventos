@@ -10,7 +10,7 @@
  *   - os dados estruturados para o Google (<script type="application/ld+json">)
  *   - a data de atualização no sitemap.xml
  *
- * Eventos que já terminaram ficam de fora dos cards e do Google (mas continuam na lista, se você quiser manter o histórico).
+ * Eventos que já terminaram continuam nos cards (o site os mostra na aba "Eventos passados") mas saem do Google e do "Próximo evento".
  */
 'use strict';
 const fs = require('fs');
@@ -48,9 +48,9 @@ const place = e => e.venue + (e.venue !== e.city ? ', ' + e.city : '');
 const meta = e => '📅 ' + longDate(e.date) + (e.horario ? ' · ' + e.horario : '') + ' · 📍 ' + place(e);
 
 const now = Date.now();
-const upcoming = data.events
-  .filter(e => endMs(e) > now)
-  .sort((a, b) => (a.date + (a.time || '')).localeCompare(b.date + (b.time || '')));
+const byDate = (a, b) => (a.date + (a.time || '')).localeCompare(b.date + (b.time || ''));
+const allEvents = data.events.slice().sort(byDate);           // cards: todos (os passados vão para a aba "Eventos passados")
+const upcoming = allEvents.filter(e => endMs(e) > now);       // Google e "Próximo evento": só os que ainda vão acontecer
 
 // ---------- cards ----------
 function card(e, i) {
@@ -89,7 +89,7 @@ function card(e, i) {
 }
 
 html = html.replace(/(<!-- BEON:EVENTS:START -->)[\s\S]*?(\r?\n *<!-- BEON:EVENTS:END -->)/,
-  (m, a, b) => a + NL + upcoming.map(card).join(NL + NL) + b);
+  (m, a, b) => a + NL + allEvents.map(card).join(NL + NL) + b);
 
 // ---------- próximo evento (estático) ----------
 const next = upcoming.find(e => !e.soldout) || upcoming[0];
@@ -161,5 +161,5 @@ if (fs.existsSync(SITEMAP)) {
   fs.writeFileSync(SITEMAP, fs.readFileSync(SITEMAP, 'utf8').replace(/<lastmod>[^<]*<\/lastmod>/, `<lastmod>${today}</lastmod>`));
 }
 
-console.log('Pronto! ' + upcoming.length + ' evento(s) no site: ' + upcoming.map(e => e.short).join(', '));
+console.log('Pronto! ' + upcoming.length + ' evento(s) por vir: ' + upcoming.map(e => e.short).join(', ') + ' · ' + (allEvents.length - upcoming.length) + ' passado(s)');
 if (next) console.log('Próximo evento em destaque: ' + next.short);

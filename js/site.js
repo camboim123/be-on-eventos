@@ -67,23 +67,65 @@ function copyCode(){
   var now = Date.now();
   var upcoming = cards.filter(function(c){ return endOf(c) > now; })
                       .sort(function(a, b){ return startOf(a) - startOf(b); });
-  cards.forEach(function(c){
-    var past = endOf(c) <= now;
-    c.hidden = past;
-    if(past) c.setAttribute('data-past', '1');
-  });
+  var past = cards.filter(function(c){ return endOf(c) <= now; })
+                  .sort(function(a, b){ return startOf(b) - startOf(a); }); // mais recente primeiro
 
   var nextSection = document.getElementById('next');
   var grid = document.getElementById('eventsGrid');
+  var pastGrid = document.getElementById('pastGrid');
   var toolbar = document.getElementById('toolbar');
   var noEvents = document.getElementById('noEvents');
   var noResults = document.getElementById('noResults');
+  var favFilterBtn = document.getElementById('favFilter');
+  var tabUp = document.getElementById('tabUp'), tabPast = document.getElementById('tabPast');
+
+  /* ---------- Eventos passados: saem da lista principal e vão para a aba "Eventos passados" ---------- */
+  past.forEach(function(c){
+    c.setAttribute('data-past', '1');
+    c.classList.add('is-past');
+    var fav = c.querySelector('.fav-btn'); if(fav) fav.remove();
+    var badge = c.querySelector('.event-badge');
+    if(badge){ badge.className = 'event-badge soft'; badge.textContent = c.hasAttribute('data-soldout') ? 'Evento realizado · esgotou' : 'Evento realizado'; }
+    var btn = c.querySelector('.buy-btn');
+    if(btn){
+      var done = document.createElement('span');
+      done.className = 'buy-btn soldout'; done.setAttribute('aria-disabled', 'true'); done.textContent = 'EVENTO REALIZADO';
+      btn.replaceWith(done);
+    }
+    pastGrid.appendChild(c);
+  });
+  document.getElementById('countUp').textContent = upcoming.length;
+  document.getElementById('countPast').textContent = past.length;
+  tabPast.hidden = !past.length;
+
+  var tab = (location.hash === '#passados' && past.length) ? 'past' : 'up';
+  function showTab(t){
+    tab = t;
+    tabUp.setAttribute('aria-selected', String(t === 'up'));
+    tabPast.setAttribute('aria-selected', String(t === 'past'));
+    grid.hidden = t !== 'up' || !upcoming.length;
+    pastGrid.hidden = t !== 'past';
+    noEvents.hidden = !(t === 'up' && !upcoming.length);
+    favFilterBtn.hidden = t === 'past';
+    toolbar.hidden = t === 'up' && !upcoming.length;
+    if(window.applyFilters) window.applyFilters();
+  }
+  tabUp.addEventListener('click', function(){ showTab('up'); history.replaceState(null, '', '#eventos'); });
+  tabPast.addEventListener('click', function(){ showTab('past'); history.replaceState(null, '', '#passados'); });
+  // setas do teclado entre as abas
+  [tabUp, tabPast].forEach(function(b){
+    b.addEventListener('keydown', function(e){
+      if(e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      var other = b === tabUp ? tabPast : tabUp;
+      if(!other.hidden){ other.focus(); other.click(); }
+    });
+  });
+  showTab(tab);
+  if(tab === 'past') setTimeout(function(){ document.getElementById('eventos').scrollIntoView(); }, 0);
 
   if(!upcoming.length){
     if(nextSection) nextSection.hidden = true;
-    grid.hidden = true; toolbar.hidden = true; noEvents.hidden = false;
-    return;
-  }
+  } else (function(){
 
   /* ---------- Próximo evento: o mais próximo que ainda tem ingresso ---------- */
   var pick = upcoming.filter(function(c){ return !c.hasAttribute('data-soldout'); })[0] || upcoming[0];
@@ -135,6 +177,7 @@ function copyCode(){
   }
   tick();
   if(start > Date.now()) timer = setInterval(tick, 1000);
+  })();
 
   /* ---------- Favoritos (guardados no navegador) ---------- */
   var KEY = 'beon_favs_thiago';
@@ -158,26 +201,30 @@ function copyCode(){
   function apply(){
     var terms = norm(query).trim().split(/\s+/).filter(Boolean);
     var shown = 0, favTotal = 0;
+    var favOn = onlyFav && tab === 'up';
     cards.forEach(function(c){
-      if(c.getAttribute('data-past')) return;
-      var fav = isFav(c); if(fav) favTotal++;
+      var isPast = !!c.getAttribute('data-past');
+      var fav = !isPast && isFav(c); if(fav) favTotal++;
       var btn = c.querySelector('.fav-btn');
-      btn.setAttribute('aria-pressed', String(fav));
-      var ok = terms.every(function(t){ return c._text.indexOf(t) > -1; }) && (!onlyFav || fav);
+      if(btn) btn.setAttribute('aria-pressed', String(fav));
+      var ok = terms.every(function(t){ return c._text.indexOf(t) > -1; }) && (!favOn || fav);
       c.classList.toggle('f-hide', !ok);
-      if(ok) shown++;
+      if(ok && isPast === (tab === 'past')) shown++;
     });
     favCount.textContent = favTotal;
     favFilter.setAttribute('aria-pressed', String(onlyFav));
     bnFav.classList.toggle('active', onlyFav);
-    noResults.textContent = (onlyFav && !terms.length && !favTotal)
+    noResults.textContent = (favOn && !terms.length && !favTotal)
       ? 'Você ainda não favoritou nenhum evento. Toque no ♥ de um card para salvar.'
       : 'Nenhum evento encontrado. Tente outro nome, artista, local ou mês.';
-    noResults.hidden = shown > 0;
+    var list = tab === 'past' ? past : upcoming;
+    noResults.hidden = shown > 0 || !list.length;
   }
+  window.applyFilters = apply;
 
   cards.forEach(function(c){
-    c.querySelector('.fav-btn').addEventListener('click', function(){
+    var fb = c.querySelector('.fav-btn');
+    if(fb) fb.addEventListener('click', function(){
       var id = c.getAttribute('data-id'), i = favs.indexOf(id);
       if(i > -1) favs.splice(i, 1); else favs.push(id);
       save(favs); apply();
@@ -192,7 +239,9 @@ function copyCode(){
     setTimeout(function(){ search.focus({preventScroll: true}); }, 450);
   });
   bnFav.addEventListener('click', function(){
-    onlyFav = !onlyFav; apply();
+    onlyFav = !onlyFav;
+    if(onlyFav && tab !== 'up') showTab('up');
+    apply();
     if(onlyFav) eventos.scrollIntoView({behavior: 'smooth', block: 'start'});
   });
 
