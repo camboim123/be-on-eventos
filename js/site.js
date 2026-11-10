@@ -427,3 +427,32 @@ document.querySelectorAll('.faq-q').forEach(function(btn){
     }
   }, true);
 })();
+
+// Botão "Painel": invisível para todo mundo. Aparece só no navegador que abriu o link secreto do Thiago
+// (#liberar-painel-<código>); #bloquear-painel esconde de novo. O código não fica no site, só o hash dele.
+// O botão só leva ao endereço local do painel (localhost), que só existe no computador do Thiago e pede senha.
+(function(){
+  var HASH = '748c0ea1ee29f79affb16f8896bf1cc025a3bd4a8f25b5c2df0581330a11218d';
+  var KEY = 'beon_painel_liberado';
+  var btn = document.getElementById('adminBtn');
+  if(!btn) return;
+  function clean(){ history.replaceState(null, '', location.pathname + location.search); }
+  try{ if(localStorage.getItem(KEY) === HASH) btn.hidden = false; }catch(e){}
+
+  if(location.hash === '#bloquear-painel'){
+    try{ localStorage.removeItem(KEY); }catch(e){}
+    btn.hidden = true; clean(); showToast('Botão do painel escondido neste navegador');
+    return;
+  }
+  var m = location.hash.match(/^#liberar-painel-([A-Za-z0-9_-]{16,})$/);
+  if(!m) return;
+  clean(); // tira o código da barra de endereço e do histórico
+  if(!(window.crypto && crypto.subtle && window.TextEncoder)) return;
+  crypto.subtle.digest('SHA-256', new TextEncoder().encode(m[1])).then(function(buf){
+    var hex = Array.prototype.map.call(new Uint8Array(buf), function(b){ return ('0' + b.toString(16)).slice(-2); }).join('');
+    if(hex !== HASH) return;
+    try{ localStorage.setItem(KEY, HASH); }catch(e){}
+    btn.hidden = false;
+    showToast('Botão do painel liberado neste navegador');
+  });
+})();
