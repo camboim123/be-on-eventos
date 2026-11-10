@@ -29,7 +29,7 @@ O site é publicado pelo GitHub Pages em https://camboim123.github.io/be-on-even
    node ferramentas/atualizar-site.js
    ```
 
-   Ele refaz os cards, o "Próximo evento", os dados para o Google e o sitemap. Os eventos que já passaram vão sozinhos para a aba "Eventos passados". **Não apague o evento da lista:** é assim que ele aparece lá.
+   Ele refaz os cards, o "Próximo evento", os dados para o Google e o sitemap. Os eventos que já passaram vão sozinhos para a aba "Eventos anteriores". **Não apague o evento da lista:** é assim que ele aparece lá.
 4. Faça o commit e envie para o GitHub (push).
 
 Você também pode simplesmente pedir ao Claude: *"adiciona o evento X, dia tal, local tal, link tal"*.
@@ -46,7 +46,7 @@ No Claude Code, aberto nesta pasta, existe o agente **be-onzinho** (`.claude/age
 
 ## Coisas que funcionam sozinhas
 
-- Quando um evento termina, ele sai de "Próximos eventos" e vai para a aba **"Eventos passados"**, sem botão de compra e com o selo "Evento realizado". Sem horário de fim, ele vale até as 6h do dia seguinte. O link direto para a aba é `.../be-on-eventos/#passados`.
+- Quando um evento termina, ele sai de "Próximos eventos" e vai para a aba **"Eventos anteriores"**, sem botão de compra e com o selo "Evento realizado". Sem horário de fim, ele vale até as 6h do dia seguinte. O link direto para a aba é `.../be-on-eventos/#anteriores`.
 - O bloco "Próximo evento" sempre mostra o evento mais próximo que ainda tem ingresso à venda.
 - A contagem regressiva fica em destaque quando faltam 7 dias ou menos.
 - Ao clicar em "Comprar ingresso", o cupom também é copiado, para colar no checkout se a Ingresse pedir.

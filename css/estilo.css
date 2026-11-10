@@ -490,7 +490,7 @@ section.next{padding:20px 0 30px;}
   .js .reveal{opacity:1; translate:none;}
 }
 
-/* ===== Abas: próximos eventos / eventos passados ===== */
+/* ===== Abas: próximos eventos / eventos anteriores ===== */
 .tabs{display:flex; justify-content:center; gap:6px; margin:28px auto 0; padding:5px; width:fit-content; max-width:100%;
   background:#ffffff0a; border:1px solid var(--card-border); border-radius:10px;}
 .tab{background:none; border:0; color:var(--text-dim); font:inherit; font-weight:700; font-size:14px; letter-spacing:.02em;
@@ -511,3 +511,5 @@ section.next{padding:20px 0 30px;}
   .tabs{width:100%;}
   .tab{flex:1; padding:10px 8px; font-size:13px;}
 }
+.hero-links .past{background:#ffffff0f; border:1px solid var(--card-border); color:var(--text);}
+.hero-links .past:hover{border-color:var(--accent);}

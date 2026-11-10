@@ -79,7 +79,7 @@ function copyCode(){
   var favFilterBtn = document.getElementById('favFilter');
   var tabUp = document.getElementById('tabUp'), tabPast = document.getElementById('tabPast');
 
-  /* ---------- Eventos passados: saem da lista principal e vão para a aba "Eventos passados" ---------- */
+  /* ---------- Eventos anteriores: saem da lista principal e vão para a aba "Eventos anteriores" ---------- */
   past.forEach(function(c){
     c.setAttribute('data-past', '1');
     c.classList.add('is-past');
@@ -98,7 +98,8 @@ function copyCode(){
   document.getElementById('countPast').textContent = past.length;
   tabPast.hidden = !past.length;
 
-  var tab = (location.hash === '#passados' && past.length) ? 'past' : 'up';
+  var isPastHash = function(){ return /^#(anteriores|passados)$/.test(location.hash); }; // #passados: links antigos
+  var tab = (isPastHash() && past.length) ? 'past' : 'up';
   function showTab(t){
     tab = t;
     tabUp.setAttribute('aria-selected', String(t === 'up'));
@@ -111,7 +112,7 @@ function copyCode(){
     if(window.applyFilters) window.applyFilters();
   }
   tabUp.addEventListener('click', function(){ showTab('up'); history.replaceState(null, '', '#eventos'); });
-  tabPast.addEventListener('click', function(){ showTab('past'); history.replaceState(null, '', '#passados'); });
+  tabPast.addEventListener('click', function(){ showTab('past'); history.replaceState(null, '', '#anteriores'); });
   // setas do teclado entre as abas
   [tabUp, tabPast].forEach(function(b){
     b.addEventListener('keydown', function(e){
@@ -122,6 +123,22 @@ function copyCode(){
   });
   showTab(tab);
   if(tab === 'past') setTimeout(function(){ document.getElementById('eventos').scrollIntoView(); }, 0);
+
+  // Botão "Eventos anteriores" do topo (e qualquer link para #passados) abre a aba e rola até ela
+  var heroPast = document.getElementById('heroPast');
+  if(heroPast){
+    heroPast.hidden = !past.length;
+    heroPast.addEventListener('click', function(e){
+      e.preventDefault();
+      showTab('past'); history.replaceState(null, '', '#anteriores');
+      document.getElementById('eventos').scrollIntoView({behavior: 'smooth', block: 'start'});
+    });
+  }
+  window.addEventListener('hashchange', function(){
+    if(!isPastHash() || !past.length) return;
+    showTab('past');
+    document.getElementById('eventos').scrollIntoView({behavior: 'smooth', block: 'start'});
+  });
 
   if(!upcoming.length){
     if(nextSection) nextSection.hidden = true;

@@ -10,7 +10,7 @@
  *   - os dados estruturados para o Google (<script type="application/ld+json">)
  *   - a data de atualização no sitemap.xml
  *
- * Eventos que já terminaram continuam nos cards (o site os mostra na aba "Eventos passados") mas saem do Google e do "Próximo evento".
+ * Eventos que já terminaram continuam nos cards (o site os mostra na aba "Eventos anteriores") mas saem do Google e do "Próximo evento".
  */
 'use strict';
 const fs = require('fs');
@@ -49,7 +49,7 @@ const meta = e => '📅 ' + longDate(e.date) + (e.horario ? ' · ' + e.horario :
 
 const now = Date.now();
 const byDate = (a, b) => (a.date + (a.time || '')).localeCompare(b.date + (b.time || ''));
-const allEvents = data.events.slice().sort(byDate);           // cards: todos (os passados vão para a aba "Eventos passados")
+const allEvents = data.events.slice().sort(byDate);           // cards: todos (os passados vão para a aba "Eventos anteriores")
 const upcoming = allEvents.filter(e => endMs(e) > now);       // Google e "Próximo evento": só os que ainda vão acontecer
 
 // ---------- cards ----------

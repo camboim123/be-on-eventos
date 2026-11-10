@@ -185,7 +185,7 @@
       "date": "2026-09-26",
       "time": "14:00",
       "end": "2026-09-26T23:00",
-      "soldout": true,
+      "soldout": false,
       "venue": "Vale do Anhangabaú",
       "address": "",
       "city": "São Paulo",
@@ -199,12 +199,12 @@
       "imgW": 810,
       "imgH": 1080,
       "alt": "X apresentado por Adriatique — São Paulo",
-      "badgeMode": "soldout",
+      "badgeMode": "default",
       "badgeText": "",
-      "buyLabel": "SOLD OUT",
+      "buyLabel": "COMPRAR INGRESSO",
       "buyHref": "https://embedstore.ingresse.com/tickets/www.ingresse.com/event/91444?coupon=THIAGOCAMBOIM",
       "buyRel": "noopener sponsored",
-      "keywords": "esgotado sold out anhangabau",
+      "keywords": "anhangabau",
       "cta": "",
       "ldDescShort": "Adriatique apresenta o X em São Paulo — uma noite guiada pelo som melódico e envolvente do duo suíço."
     },
@@ -222,14 +222,14 @@
       "city": "São Paulo",
       "state": "SP",
       "horario": "23h às 7h",
-      "desc": "Forever [After Party]: depois do Anhangabaú, a noite continua com o Adriatique em DJ set mais intimista. A partir de R$ 200 · 18+.",
+      "desc": "Forever [After Party]: a noite continua no Komplexo Tempo com o Adriatique em DJ set mais intimista. A partir de R$ 200 · 18+.",
       "performers": [
         "Adriatique"
       ],
       "img": "after-x.webp",
-      "imgW": 600,
-      "imgH": 800,
-      "alt": "After X Adriatique — Forever After Party, Komplexo Tempo",
+      "imgW": 810,
+      "imgH": 1080,
+      "alt": "After X Adriatique — Komplexo Tempo, São Paulo",
       "badgeMode": "custom",
       "badgeText": "Vendas à parte do X · ingresso pela Ingresse",
       "buyLabel": "CHAMAR NO WHATSAPP",
@@ -413,6 +413,7 @@
     <div class="hero-links">
       <a class="ig" id="heroIg" href="https://www.instagram.com/camboim__/" target="_blank" rel="noopener">📷 Instagram</a>
       <a class="wa" id="heroWa" href="https://wa.me/5511969236782?text=Oi%20Thiago!%20Vim%20pela%20sua%20p%C3%A1gina%20de%20eventos%20Be-On." target="_blank" rel="noopener">💬 WhatsApp</a>
+      <a class="past" id="heroPast" href="#anteriores">🕘 Eventos anteriores</a>
     </div>
   </div>
 </header>
@@ -446,7 +447,7 @@
 
     <div class="tabs" role="tablist" aria-label="Eventos">
       <button class="tab" type="button" role="tab" id="tabUp" aria-selected="true" aria-controls="eventsGrid">Próximos eventos <em id="countUp"></em></button>
-      <button class="tab" type="button" role="tab" id="tabPast" aria-selected="false" aria-controls="pastGrid">Eventos passados <em id="countPast"></em></button>
+      <button class="tab" type="button" role="tab" id="tabPast" aria-selected="false" aria-controls="pastGrid">Eventos anteriores <em id="countPast"></em></button>
     </div>
 
     <div class="toolbar" id="toolbar">
@@ -462,32 +463,31 @@
 
     <div class="events-grid" id="eventsGrid" role="tabpanel" aria-labelledby="tabUp">
       <!-- BEON:EVENTS:START -->
-      <div class="event-card c1 is-soldout" data-id="x" data-date="2026-09-26" data-short="X Adriatique" data-time="14:00" data-end="2026-09-26T23:00" data-soldout data-keywords="esgotado sold out anhangabau">
+      <div class="event-card c1" data-id="x" data-date="2026-09-26" data-short="X Adriatique" data-time="14:00" data-end="2026-09-26T23:00" data-keywords="anhangabau">
         <button class="fav-btn" type="button" aria-pressed="false" aria-label="Favoritar X Adriatique" title="Favoritar">♥</button>
         <div class="event-media" style="background-image:url(img/x-adriatique.webp)">
           <img class="event-img" src="img/x-adriatique.webp" width="810" height="1080" loading="lazy" decoding="async" alt="X apresentado por Adriatique — São Paulo">
-          <div class="sold-stamp" aria-hidden="true"><span>SOLD OUT</span></div>
         </div>
         <div class="event-body">
           <span class="event-tag">Line-up internacional</span>
           <h3>X — ADRIATIQUE</h3>
           <p class="event-meta">📅 26 de setembro de 2026 · 14h às 23h · 📍 Vale do Anhangabaú, São Paulo</p>
           <p class="event-desc">Adriatique apresenta o X em São Paulo — uma noite guiada pelo som melódico e envolvente do duo suíço.</p>
-          <span class="event-badge soft">Ingressos esgotados</span>
-          <span class="buy-btn soldout" aria-disabled="true">SOLD OUT</span>
+          <span class="event-badge">✓ 5% OFF com THIAGOCAMBOIM</span>
+          <a class="buy-btn" href="https://embedstore.ingresse.com/tickets/www.ingresse.com/event/91444?coupon=THIAGOCAMBOIM" target="_blank" rel="noopener sponsored">COMPRAR INGRESSO</a>
         </div>
       </div>
 
       <div class="event-card c2" data-id="after-x" data-date="2026-09-26" data-short="After X" data-time="23:00" data-end="2026-09-27T07:00" data-keywords="after adriatique forever mooca" data-cta="CHAMAR NO WHATSAPP">
         <button class="fav-btn" type="button" aria-pressed="false" aria-label="Favoritar After X" title="Favoritar">♥</button>
         <div class="event-media" style="background-image:url(img/after-x.webp)">
-          <img class="event-img" src="img/after-x.webp" width="600" height="800" loading="lazy" decoding="async" alt="After X Adriatique — Forever After Party, Komplexo Tempo">
+          <img class="event-img" src="img/after-x.webp" width="810" height="1080" loading="lazy" decoding="async" alt="After X Adriatique — Komplexo Tempo, São Paulo">
         </div>
         <div class="event-body">
           <span class="event-tag">After party</span>
           <h3>AFTER X — ADRIATIQUE</h3>
           <p class="event-meta">📅 26 de setembro de 2026 · 23h às 7h · 📍 Komplexo Tempo, São Paulo</p>
-          <p class="event-desc">Forever [After Party]: depois do Anhangabaú, a noite continua com o Adriatique em DJ set mais intimista. A partir de R$ 200 · 18+.</p>
+          <p class="event-desc">Forever [After Party]: a noite continua no Komplexo Tempo com o Adriatique em DJ set mais intimista. A partir de R$ 200 · 18+.</p>
           <span class="event-badge soft">Vendas à parte do X · ingresso pela Ingresse</span>
           <a class="buy-btn" href="https://wa.me/5511969236782?text=Oi%20Thiago!%20Quero%20o%20ingresso%20do%20After%20X%20(Adriatique)%20com%20o%20seu%20cupom." target="_blank" rel="noopener">CHAMAR NO WHATSAPP</a>
         </div>
