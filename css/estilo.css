@@ -489,3 +489,25 @@ section.next{padding:20px 0 30px;}
   *, *::before, *::after{animation:none !important; transition:none !important; scroll-behavior:auto !important;}
   .js .reveal{opacity:1; translate:none;}
 }
+
+/* ===== Abas: próximos eventos / eventos passados ===== */
+.tabs{display:flex; justify-content:center; gap:6px; margin:28px auto 0; padding:5px; width:fit-content; max-width:100%;
+  background:#ffffff0a; border:1px solid var(--card-border); border-radius:10px;}
+.tab{background:none; border:0; color:var(--text-dim); font:inherit; font-weight:700; font-size:14px; letter-spacing:.02em;
+  padding:10px 18px; border-radius:7px; cursor:pointer; transition:background .15s ease, color .15s ease; white-space:nowrap;}
+.tab em{font-style:normal; font-size:12px; margin-left:6px; padding:1px 8px; border-radius:999px; background:#ffffff14;}
+.tab:hover{color:var(--text);}
+.tab[aria-selected="true"]{background:var(--gradient); color:#fff;}
+.tab[aria-selected="true"] em{background:#00000040;}
+.tabs + .toolbar{margin-top:16px;}
+
+/* Cards de eventos que já aconteceram */
+.event-card.is-past .event-img{filter:grayscale(.85) brightness(.6);}
+.event-card.is-past:hover .event-img{filter:grayscale(.3) brightness(.85);}
+.event-card.is-past .event-tag{opacity:.7;}
+.event-card.is-past .event-meta{color:var(--text-dim);}
+
+@media (max-width: 560px){
+  .tabs{width:100%;}
+  .tab{flex:1; padding:10px 8px; font-size:13px;}
+}
