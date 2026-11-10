@@ -34,6 +34,16 @@ O site é publicado pelo GitHub Pages em https://camboim123.github.io/be-on-even
 
 Você também pode simplesmente pedir ao Claude: *"adiciona o evento X, dia tal, local tal, link tal"*.
 
+## Estatísticas de acesso (GoatCounter)
+
+O site conta visitas e cliques (comprar, WhatsApp, compartilhar, agenda, favoritar, copiar cupom) pelo GoatCounter, sem cookies.
+A contagem só funciona com o código do site preenchido em `"goatcounter"`, dentro do `beon-data` (por exemplo `"beon-thiago"`). Com o campo vazio, nada é contado.
+Os números aparecem no painel local, na pasta `C:\Users\55119\Projetos\be-on-painel`, que fica fora deste repositório. Veja o `LEIA-ME.md` de lá.
+
+## Assistente be-onzinho
+
+No Claude Code, aberto nesta pasta, existe o agente **be-onzinho** (`.claude/agents/be-onzinho.md`). Ele já conhece o projeto. Peça, por exemplo, *"be-onzinho, adiciona o evento tal"*.
+
 ## Coisas que funcionam sozinhas
 
 - Um evento some do site quando termina. Sem horário de fim, ele vale até as 6h do dia seguinte.
