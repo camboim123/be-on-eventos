@@ -432,7 +432,7 @@ document.querySelectorAll('.faq-q').forEach(function(btn){
 // (#liberar-painel-<código>); #bloquear-painel esconde de novo. O código não fica no site, só o hash dele.
 // O botão só leva ao endereço local do painel (localhost), que só existe no computador do Thiago e pede senha.
 (function(){
-  var HASH = '748c0ea1ee29f79affb16f8896bf1cc025a3bd4a8f25b5c2df0581330a11218d';
+  var HASH = 'eaa09be39200697409fdd8700804b241072e5722d30d6ebad28ca441391fbd1c';
   var KEY = 'beon_painel_liberado';
   var btn = document.getElementById('adminBtn');
   if(!btn) return;
