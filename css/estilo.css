@@ -577,3 +577,17 @@ footer .social-links a:active{transform:scale(var(--press-scale)) !important;}
   footer .social-links a:active, .fav-btn:active, .bottom-nav a:active, .bottom-nav button:active{transform:none !important;}
   .event-card:hover{transform:none;}
 }
+
+/* ===== V4 (P1): entradas e confirmações ===== */
+/* Revelar ao rolar: mais curto e mais perto (antes 600ms/22px); --d vem do JS para o stagger */
+.js .reveal{translate:0 10px;}
+.js .reveal.in{transition:opacity var(--dur-enter) var(--ease-out) var(--d, 0ms), translate var(--dur-enter) var(--ease-out) var(--d, 0ms),
+  transform var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-std);}
+
+/* Troca de aba (próximos/anteriores): a grade entra com fade curto */
+.events-grid.swap{animation:grid-in 180ms var(--ease-out);}
+@keyframes grid-in{from{opacity:0;}}
+
+/* ♥ ao favoritar: um "pop" curto confirma que salvou */
+.fav-btn.pop{animation:fav-pop 280ms var(--ease-out);}
+@keyframes fav-pop{0%{transform:scale(.8);} 55%{transform:scale(1.18);} 100%{transform:scale(1);}}
