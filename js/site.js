@@ -104,6 +104,8 @@ function copyCode(){
     tab = t;
     tabUp.setAttribute('aria-selected', String(t === 'up'));
     tabPast.setAttribute('aria-selected', String(t === 'past'));
+    var shownGrid = t === 'past' ? pastGrid : grid;
+    shownGrid.classList.remove('swap'); void shownGrid.offsetWidth; shownGrid.classList.add('swap');
     grid.hidden = t !== 'up' || !upcoming.length;
     pastGrid.hidden = t !== 'past';
     noEvents.hidden = !(t === 'up' && !upcoming.length);
@@ -245,6 +247,7 @@ function copyCode(){
       var id = c.getAttribute('data-id'), i = favs.indexOf(id);
       if(i > -1) favs.splice(i, 1); else favs.push(id);
       save(favs); apply();
+      if(i === -1){ fb.classList.remove('pop'); void fb.offsetWidth; fb.classList.add('pop'); }
     });
   });
   search.addEventListener('input', function(){ query = search.value; apply(); });
@@ -361,7 +364,13 @@ function copyCode(){
   var els = document.querySelectorAll('.next-card, .event-card, .about-card, .how-item, .faq-item, .section-title');
   if(!('IntersectionObserver' in window)) return;
   var io = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    // o que entra junto aparece em sequência curta (40ms entre itens, no máximo 4 degraus)
+    var n = 0;
+    entries.forEach(function(e){
+      if(!e.isIntersecting) return;
+      e.target.style.setProperty('--d', Math.min(n++, 4) * 40 + 'ms');
+      e.target.classList.add('in'); io.unobserve(e.target);
+    });
   }, {rootMargin: '0px 0px -8% 0px'});
   els.forEach(function(el){ el.classList.add('reveal'); io.observe(el); });
 })();

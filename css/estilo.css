@@ -521,3 +521,73 @@ section.next{padding:20px 0 30px;}
 @media (max-width: 420px){
   .topbar .wrap:has(.admin-btn:not([hidden])) .clock{display:none;}
 }
+
+/* ===== V4: movimento — tokens e microinterações =====
+   Linguagem única: respostas rápidas, nada em loop infinito, só transform/opacity/cores. */
+:root{
+  --dur-micro:120ms; --dur-base:200ms; --dur-enter:300ms;
+  --ease-out:cubic-bezier(.2,.8,.2,1); --ease-in:cubic-bezier(.4,0,1,1); --ease-std:cubic-bezier(.4,0,.2,1);
+  --press-scale:.97;
+}
+
+/* Feedback de toque/clique (funciona no celular, onde não existe hover) */
+.copy-btn, .buy-btn, .chip, .tab, .fav-btn, .card-actions a, .card-actions button,
+.hero-links a, .about-links a, .wa-float, .admin-btn, footer .social-links a,
+.bottom-nav a, .bottom-nav button{
+  -webkit-tap-highlight-color:transparent;
+  transition:transform var(--dur-micro) var(--ease-out), background-color var(--dur-micro) var(--ease-std),
+    color var(--dur-micro) var(--ease-std), border-color var(--dur-micro) var(--ease-std),
+    box-shadow var(--dur-base) var(--ease-std), opacity var(--dur-micro) var(--ease-std);
+}
+.copy-btn:active, .buy-btn:not(.soldout):active, .chip:active, .tab:active, .card-actions a:active,
+.card-actions button:active, .hero-links a:active, .about-links a:active, .wa-float:active, .admin-btn:active,
+footer .social-links a:active{transform:scale(var(--press-scale)) !important;}
+.fav-btn:active{transform:scale(.9) !important;}
+.bottom-nav a:active, .bottom-nav button:active{transform:scale(.92);}
+.faq-toggle{transition:border-color var(--dur-base) var(--ease-std), background-color var(--dur-base) var(--ease-std);}
+.faq-toggle::before, .faq-toggle::after{transition:opacity var(--dur-base) var(--ease-std), transform var(--dur-base) var(--ease-std);}
+.search{transition:border-color var(--dur-micro) var(--ease-std);}
+
+/* Card: elevação discreta (antes subia 6px e dava zoom na arte) — só em dispositivos com mouse */
+.event-card{transition:transform var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-std);}
+.event-card:hover{transform:none;}
+.event-card:hover .event-img{transform:none;}
+@media (hover:hover){
+  .event-card:hover{transform:translateY(-3px);}
+}
+.buy-btn:hover{transform:none;}
+.buy-btn:not(.soldout)::after{transition:transform var(--dur-micro) var(--ease-out);}
+
+/* Equalizer: toca 3 ciclos ao abrir a página e repousa num desenho estático (sem loop infinito) */
+.eq i{transform:scaleY(var(--r, .5)); animation:eq-fim 1.1s var(--ease-std) 3;}
+.eq i:nth-child(1){--r:.45} .eq i:nth-child(2){--r:.75} .eq i:nth-child(3){--r:.55} .eq i:nth-child(4){--r:1}
+.eq i:nth-child(5){--r:.6} .eq i:nth-child(6){--r:.85} .eq i:nth-child(7){--r:.4}
+@keyframes eq-fim{0%,100%{transform:scaleY(var(--r, .5))} 50%{transform:scaleY(.25)}}
+.eq i:nth-child(odd){animation-name:eq-fim-b;}
+@keyframes eq-fim-b{0%,100%{transform:scaleY(var(--r, .5))} 50%{transform:scaleY(1)}}
+
+/* "Faltam X dias" em destaque: pulsa duas vezes para chamar atenção e para */
+.countdown-pill.hot{animation:pulse 1.8s var(--ease-std) 2;}
+
+/* Toast com as curvas padrão */
+.toast{transition:opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);}
+@media (prefers-reduced-motion: reduce){
+  .copy-btn:active, .buy-btn:not(.soldout):active, .chip:active, .tab:active, .card-actions a:active,
+  .card-actions button:active, .hero-links a:active, .about-links a:active, .wa-float:active, .admin-btn:active,
+  footer .social-links a:active, .fav-btn:active, .bottom-nav a:active, .bottom-nav button:active{transform:none !important;}
+  .event-card:hover{transform:none;}
+}
+
+/* ===== V4 (P1): entradas e confirmações ===== */
+/* Revelar ao rolar: mais curto e mais perto (antes 600ms/22px); --d vem do JS para o stagger */
+.js .reveal{translate:0 10px;}
+.js .reveal.in{transition:opacity var(--dur-enter) var(--ease-out) var(--d, 0ms), translate var(--dur-enter) var(--ease-out) var(--d, 0ms),
+  transform var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-std);}
+
+/* Troca de aba (próximos/anteriores): a grade entra com fade curto */
+.events-grid.swap{animation:grid-in 180ms var(--ease-out);}
+@keyframes grid-in{from{opacity:0;}}
+
+/* ♥ ao favoritar: um "pop" curto confirma que salvou */
+.fav-btn.pop{animation:fav-pop 280ms var(--ease-out);}
+@keyframes fav-pop{0%{transform:scale(.8);} 55%{transform:scale(1.18);} 100%{transform:scale(1);}}
