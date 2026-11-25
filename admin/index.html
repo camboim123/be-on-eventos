@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Painel · Be-On Thiago</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#070403; --bg-alt:#0f0808; --card:#160b0c; --card-border:#5c141f80;
+    --text:#f5efe9; --text-dim:#b3a19f; --muted:#7d6b69;
+    --accent:#ff1a3c; --accent2:#a3001a; --accent3:#ff6a1a;
+    --grid:#ffffff14; --good:#3ddc84; --warn:#ffb020;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{-webkit-text-size-adjust:100%;}
+  body{background:var(--bg); color:var(--text); font-family:'Space Grotesk',sans-serif; min-height:100vh; line-height:1.4;}
+  .display{font-family:'Bebas Neue',sans-serif; letter-spacing:.06em;}
+  .hazard{height:10px; background:repeating-linear-gradient(135deg,var(--accent) 0 16px,#000 16px 32px);}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 16px;}
+
+  /* topo */
+  .top{display:flex; align-items:center; gap:12px; flex-wrap:wrap; padding:16px 0;}
+  .logo{font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:.1em;}
+  .logo span{color:var(--accent);}
+  .live{display:inline-flex; align-items:center; gap:7px; font-size:12px; color:var(--text-dim); letter-spacing:.08em; text-transform:uppercase;}
+  .dot{width:9px; height:9px; border-radius:50%; background:var(--good); box-shadow:0 0 0 0 #3ddc8488; animation:pulse 2s infinite;}
+  .dot.off{background:var(--muted); animation:none;}
+  @keyframes pulse{70%{box-shadow:0 0 0 8px #3ddc8400;} 100%{box-shadow:0 0 0 0 #3ddc8400;}}
+  .spacer{flex:1;}
+  select,button,input{font:inherit; color:var(--text);}
+  .ctl{background:#ffffff0a; border:1px solid var(--card-border); border-radius:10px; padding:9px 12px; font-size:14px; cursor:pointer;}
+  .ctl:hover{border-color:var(--accent);}
+  select.ctl option{background:#160b0c;}
+  :focus-visible{outline:2px solid var(--accent3); outline-offset:2px;}
+
+  /* login */
+  .login{max-width:380px; margin:12vh auto 0; background:var(--card); border:1px solid var(--card-border); border-radius:18px; padding:28px 24px;}
+  .login h1{font-size:34px; margin-bottom:4px;}
+  .login p{color:var(--text-dim); font-size:14px; margin-bottom:18px;}
+  .login label{display:block; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-dim); margin:12px 0 6px;}
+  .login input{width:100%; background:#000; border:1px solid var(--card-border); border-radius:10px; padding:12px; font-size:16px;}
+  .login input:focus{border-color:var(--accent); outline:none;}
+  .btn{display:block; width:100%; margin-top:18px; padding:13px; border:0; border-radius:12px; cursor:pointer;
+       background:linear-gradient(135deg,var(--accent2),var(--accent3)); color:#fff; font-weight:700; letter-spacing:.06em; font-size:15px;}
+  .btn:disabled{opacity:.6; cursor:wait;}
+  .err{color:#ff7b7b; font-size:13px; margin-top:12px; min-height:18px;}
+  .setup-note{background:#ff6a1a14; border:1px solid #ff6a1a55; color:var(--accent3); border-radius:12px; padding:14px; font-size:14px; margin-top:16px;}
+
+  /* termômetro */
+  .thermo{display:flex; align-items:center; gap:16px; flex-wrap:wrap; background:var(--card); border:1px solid var(--card-border); border-radius:16px; padding:18px 20px; margin-bottom:14px;}
+  .thermo .badge{font-family:'Bebas Neue',sans-serif; font-size:30px; letter-spacing:.08em; padding:2px 14px; border-radius:10px; border:1.5px solid currentColor;}
+  .thermo .txt{color:var(--text-dim); font-size:14px; flex:1; min-width:200px;}
+  .thermo .txt b{color:var(--text);}
+  .st-hot{color:var(--accent);} .st-ok{color:var(--good);} .st-slow{color:var(--warn);} .st-off{color:var(--muted);}
+
+  /* KPIs */
+  .kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:14px;}
+  .kpi{background:var(--card); border:1px solid var(--card-border); border-radius:14px; padding:14px 16px;}
+  .kpi .l{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-dim);}
+  .kpi .v{font-family:'Bebas Neue',sans-serif; font-size:44px; line-height:1.05; letter-spacing:.04em; margin-top:2px; font-variant-numeric:tabular-nums;}
+  .kpi .s{font-size:12px; color:var(--muted);}
+
+  /* cartões / gráficos */
+  .grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr)); gap:14px; margin-bottom:14px;}
+  .card{background:var(--card); border:1px solid var(--card-border); border-radius:16px; padding:18px 18px 16px; min-width:0;}
+  .card h2{font-family:'Bebas Neue',sans-serif; font-size:24px; letter-spacing:.08em; font-weight:400;}
+  .card .sub{font-size:12px; color:var(--muted); margin-bottom:10px;}
+  .head-row{display:flex; align-items:baseline; justify-content:space-between; gap:8px;}
+  .linkbtn{background:none; border:0; color:var(--text-dim); font-size:12px; cursor:pointer; text-decoration:underline; padding:4px;}
+  .chartbox{position:relative;}
+  .chartbox svg{display:block; width:100%; height:auto; overflow:visible;}
+  .tip{position:absolute; pointer-events:none; background:#000; border:1px solid var(--card-border); border-radius:10px; padding:7px 10px; font-size:12px; white-space:nowrap; transform:translate(-50%,-110%); opacity:0; transition:opacity .08s; z-index:5;}
+  .tip b{display:block; font-size:15px;}
+  .tip span{color:var(--text-dim);}
+  .empty{color:var(--muted); font-size:14px; padding:18px 0;}
+
+  /* barras horizontais */
+  .hbars{display:flex; flex-direction:column; gap:10px;}
+  .hb .row{display:flex; justify-content:space-between; gap:10px; font-size:14px; margin-bottom:4px;}
+  .hb .row .n{color:var(--text); font-variant-numeric:tabular-nums; font-weight:600;}
+  .hb .row .k{color:var(--text-dim); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .hb .track{height:8px; background:#ffffff0d; border-radius:4px;}
+  .hb .fill{height:8px; background:var(--accent); border-radius:0 4px 4px 0; min-width:2px;}
+
+  table{width:100%; border-collapse:collapse; font-size:14px; font-variant-numeric:tabular-nums;}
+  th,td{text-align:left; padding:7px 6px; border-bottom:1px solid var(--grid);}
+  th{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--text-dim); font-weight:500;}
+  .scroll{max-height:280px; overflow:auto;}
+
+  .feed{list-style:none; display:flex; flex-direction:column;}
+  .feed li{display:flex; gap:10px; align-items:baseline; padding:8px 0; border-bottom:1px solid var(--grid); font-size:14px;}
+  .feed li:last-child{border-bottom:0;}
+  .feed .t{color:var(--muted); font-size:12px; min-width:62px; font-variant-numeric:tabular-nums;}
+  .feed .d{color:var(--text-dim); font-size:12px; margin-left:auto; text-align:right;}
+  .foot{color:var(--muted); font-size:12px; padding:18px 0 40px; text-align:center;}
+  [hidden]{display:none !important;}
+  @media(max-width:520px){ .kpi .v{font-size:38px;} .thermo .badge{font-size:26px;} }
+</style>
+</head>
+<body>
+<div class="hazard"></div>
+
+<!-- LOGIN -->
+<main id="loginView" class="wrap" hidden>
+  <form class="login" id="loginForm" autocomplete="on">
+    <div class="logo">BE<span>·</span>ON</div>
+    <h1 class="display">Painel</h1>
+    <p>Acesso restrito ao administrador do site.</p>
+    <label for="email">E-mail</label>
+    <input id="email" type="email" autocomplete="username" required>
+    <label for="pass">Senha</label>
+    <input id="pass" type="password" autocomplete="current-password" required>
+    <button class="btn" id="loginBtn" type="submit">ENTRAR</button>
+    <div class="err" id="loginErr" role="alert"></div>
+    <div class="setup-note" id="cfgNote" hidden>O painel ainda não foi ligado ao banco de dados. Preencha o arquivo <b>config.js</b> com a URL e a chave do Supabase.</div>
+  </form>
+</main>
+
+<!-- PAINEL -->
+<main id="appView" class="wrap" hidden>
+  <header class="top">
+    <div class="logo">BE<span>·</span>ON <span style="font-size:16px;color:var(--text-dim);letter-spacing:.2em">PAINEL</span></div>
+    <span class="live"><i class="dot" id="liveDot"></i><span id="liveTxt">ao vivo</span></span>
+    <div class="spacer"></div>
+    <label for="period" style="position:absolute;left:-9999px">Período</label>
+    <select class="ctl" id="period">
+      <option value="7">Últimos 7 dias</option>
+      <option value="30" selected>Últimos 30 dias</option>
+      <option value="90">Últimos 90 dias</option>
+    </select>
+    <button class="ctl" id="refreshBtn" type="button" title="Atualizar agora">↻</button>
+    <button class="ctl" id="logoutBtn" type="button">Sair</button>
+  </header>
+
+  <section class="thermo" aria-live="polite">
+    <div class="badge st-off" id="thBadge">—</div>
+    <div class="txt" id="thTxt">Carregando…</div>
+  </section>
+
+  <section class="kpis" id="kpis"></section>
+
+  <section class="grid2">
+    <div class="card">
+      <div class="head-row"><h2>Visitas por dia</h2><button class="linkbtn" data-table="daily" type="button">ver tabela</button></div>
+      <div class="sub" id="subViews"></div>
+      <div class="chartbox" id="chViews"></div>
+    </div>
+    <div class="card">
+      <h2>Cliques por dia</h2>
+      <div class="sub">Ingressos, Instagram e WhatsApp somados</div>
+      <div class="chartbox" id="chClicks"></div>
+    </div>
+  </section>
+
+  <section class="card" style="margin-bottom:14px">
+    <h2>Últimas 24 horas</h2>
+    <div class="sub">Visitas por hora (horário de Brasília)</div>
+    <div class="chartbox" id="chHours"></div>
+  </section>
+
+  <section class="grid2">
+    <div class="card"><h2>Cliques por evento</h2><div class="sub">Botões de ingresso</div><div id="byEvent"></div></div>
+    <div class="card"><h2>Origem do tráfego</h2><div class="sub">De onde as visitas vieram</div><div id="sources"></div></div>
+    <div class="card"><h2>Contatos</h2><div class="sub">Quem foi te chamar</div><div id="contacts"></div></div>
+    <div class="card"><h2>Dispositivos</h2><div class="sub">Como acessam o site</div><div id="devices"></div></div>
+  </section>
+
+  <section class="card" style="margin-bottom:14px">
+    <h2>Atividade recente</h2>
+    <div class="sub">Últimas ações no site</div>
+    <ul class="feed" id="feed"></ul>
+  </section>
+
+  <section class="card" id="tableCard" hidden style="margin-bottom:14px">
+    <div class="head-row"><h2>Tabela diária</h2><button class="linkbtn" id="tableClose" type="button">fechar</button></div>
+    <div class="scroll"><table id="dailyTable"></table></div>
+  </section>
+
+  <p class="foot" id="foot"></p>
+</main>
+
+<div class="hazard"></div>
+
+<script src="../config.js"></script>
+<script>
+(function(){
+  'use strict';
+  var CFG = window.BEON_CFG || {};
+  var TZ = 'America/Sao_Paulo';
+  var $ = function(id){ return document.getElementById(id); };
+  var configured = CFG.url && CFG.url.indexOf('http') === 0 && CFG.key && CFG.key.indexOf('_AQUI') < 0;
+
+  var session = null;   // {access, refresh, exp}
+  var names = {};       // id do evento -> nome curto
+  var data = null, timer = null, busy = false, lastSig = null;
+
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function nf(n){ return Number(n || 0).toLocaleString('pt-BR'); }
+  function show(view){ $('loginView').hidden = view !== 'login'; $('appView').hidden = view !== 'app'; }
+
+  /* ---------- sessão ---------- */
+  function saveSession(j){
+    session = {access: j.access_token, refresh: j.refresh_token, exp: Date.now() + (j.expires_in - 60) * 1000};
+    try{ localStorage.setItem('beon_admin_rt', session.refresh); localStorage.setItem('beon_no_track', '1'); }catch(e){}
+  }
+  function clearSession(){ session = null; try{ localStorage.removeItem('beon_admin_rt'); }catch(e){} }
+  function authCall(grant, body){
+    return fetch(CFG.url + '/auth/v1/token?grant_type=' + grant, {
+      method: 'POST', headers: {'Content-Type':'application/json', 'apikey': CFG.key}, body: JSON.stringify(body)
+    }).then(function(r){ return r.json().then(function(j){ if(!r.ok) throw j; return j; }); });
+  }
+  function ensureToken(){
+    if(session && Date.now() < session.exp) return Promise.resolve();
+    var rt = session ? session.refresh : null;
+    if(!rt){ try{ rt = localStorage.getItem('beon_admin_rt'); }catch(e){} }
+    if(!rt) return Promise.reject({reason:'no-session'});
+    return authCall('refresh_token', {refresh_token: rt}).then(saveSession);
+  }
+
+  /* ---------- dados ---------- */
+  function loadNames(){
+    return fetch('../index.html', {cache:'no-cache'}).then(function(r){ return r.text(); }).then(function(html){
+      var m = html.match(/<script[^>]*id="beon-data"[^>]*>([\s\S]*?)<\/script>/);
+      if(!m) return;
+      var j = JSON.parse(m[1]);
+      (j.events || []).forEach(function(e){ names[e.id] = e.short || e.title || e.id; });
+    }).catch(function(){});
+  }
+  function fetchStats(){
+    return ensureToken().then(function(){
+      return fetch(CFG.url + '/rest/v1/rpc/admin_stats', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json', 'apikey': CFG.key, 'Authorization': 'Bearer ' + session.access},
+        body: JSON.stringify({days: parseInt($('period').value, 10)})
+      });
+    }).then(function(r){
+      if(r.status === 401 || r.status === 403){ throw {reason:'auth'}; }
+      if(!r.ok){ return r.json().then(function(j){ throw {reason:'api', msg: (j && j.message) || r.status}; }); }
+      return r.json();
+    });
+  }
+  function refresh(){
+    if(busy) return; busy = true;
+    fetchStats().then(function(d){
+      var sig = JSON.stringify(d, function(k, v){ return k === 'generated_at' ? undefined : v; });
+      data = d; setLive(true);
+      if(sig !== lastSig){ lastSig = sig; render(); }
+    }).catch(function(e){
+      if(e && (e.reason === 'auth' || e.reason === 'no-session' || e.error === 'invalid_grant' || e.error_code)){ logout(); return; }
+      setLive(false, e && e.msg ? String(e.msg) : 'sem conexão');
+      if(e && e.msg && /admin_stats/.test(e.msg)) $('thTxt').textContent = 'O banco ainda não foi configurado (rode o arquivo setup.sql no Supabase).';
+    }).then(function(){ busy = false; });
+  }
+  function setLive(ok, msg){
+    $('liveDot').className = 'dot' + (ok ? '' : ' off');
+    $('liveTxt').textContent = ok ? 'ao vivo · atualizado ' + new Date().toLocaleTimeString('pt-BR', {timeZone: TZ}) : (msg || 'sem conexão');
+  }
+
+  /* ---------- séries completas (preenche dias/horas sem visita com 0) ---------- */
+  function spDateStr(d){ return d.toLocaleDateString('en-CA', {timeZone: TZ}); }
+  function dailySeries(){
+    var n = parseInt($('period').value, 10), map = {};
+    (data.daily || []).forEach(function(r){ map[r.day] = r; });
+    var t = spDateStr(new Date()).split('-'), base = Date.UTC(+t[0], +t[1] - 1, +t[2]), out = [];
+    for(var i = n - 1; i >= 0; i--){
+      var k = new Date(base - i * 86400000).toISOString().slice(0, 10), r = map[k] || {};
+      out.push({key: k, views: r.views || 0, visitors: r.visitors || 0, clicks: r.clicks || 0});
+    }
+    return out;
+  }
+  function hourlySeries(){
+    var map = {};
+    (data.hourly || []).forEach(function(r){ map[String(r.hour).slice(0, 13)] = r.views; });
+    var p = new Intl.DateTimeFormat('en-CA', {timeZone: TZ, year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', hourCycle:'h23'}).formatToParts(new Date()), g = {};
+    p.forEach(function(x){ g[x.type] = x.value; });
+    var base = Date.UTC(+g.year, +g.month - 1, +g.day, +g.hour), out = [];
+    for(var i = 23; i >= 0; i--){
+      var d = new Date(base - i * 3600000), k = d.toISOString().slice(0, 13);
+      out.push({key: k, views: map[k] || 0, label: k.slice(11, 13) + 'h'});
+    }
+    return out;
+  }
+  function fmtDay(k){ var p = k.split('-'); return p[2] + '/' + p[1]; }
+
+  /* ---------- gráfico de barras (SVG, com tooltip) ---------- */
+  function barChart(el, items, opts){
+    var W = Math.max(300, Math.round(el.clientWidth || 640)), H = 190, L = 34, B = 24, T = 8, R = 4;
+    var max = Math.max.apply(null, items.map(function(i){ return i.v; }).concat([1]));
+    var nice = 1, mags = [1, 2, 5];
+    for(var e = 0; max / nice > 4; ){ nice = mags[e % 3] * Math.pow(10, Math.floor(e / 3)); e++; }
+    var top = Math.ceil(max / nice) * nice;
+    var n = items.length, iw = (W - L - R) / n, bw = Math.max(2, Math.min(28, iw * 0.62));
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(opts.aria) + '">';
+    for(var g = 0; g * nice <= top; g++){
+      var y = H - B - (g * nice / top) * (H - B - T);
+      s += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + y + '" y2="' + y + '" stroke="' + (g ? '#ffffff14' : '#ffffff33') + '" stroke-width="1"/>';
+      s += '<text x="' + (L - 6) + '" y="' + (y + 4) + '" text-anchor="end" font-size="11" fill="#7d6b69">' + nf(g * nice) + '</text>';
+    }
+    items.forEach(function(it, i){
+      var h = (it.v / top) * (H - B - T), x = L + i * iw + (iw - bw) / 2, y = H - B - h, r = Math.min(3, bw / 2, h);
+      if(it.v > 0){
+        s += '<path class="bar" data-i="' + i + '" fill="#ff1a3c" d="M' + x + ' ' + (H - B) + 'V' + (y + r) + 'Q' + x + ' ' + y + ' ' + (x + r) + ' ' + y + 'H' + (x + bw - r) + 'Q' + (x + bw) + ' ' + y + ' ' + (x + bw) + ' ' + (y + r) + 'V' + (H - B) + 'Z"/>';
+      }
+    });
+    var every = opts.every || (n > 40 ? 10 : n > 20 ? 5 : n > 10 ? 3 : 1);
+    if(W < 420 && !opts.every) every = Math.ceil(every * 1.5);
+    items.forEach(function(it, i){
+      if(i % every === 0 || i === n - 1){
+        s += '<text x="' + (L + i * iw + iw / 2) + '" y="' + (H - 6) + '" text-anchor="middle" font-size="11" fill="#7d6b69">' + esc(it.x) + '</text>';
+      }
+    });
+    s += '<rect id="hoverband" x="0" y="' + T + '" width="0" height="' + (H - B - T) + '" fill="#ffffff10" pointer-events="none"/>';
+    s += '<rect x="' + L + '" y="0" width="' + (W - L - R) + '" height="' + H + '" fill="transparent" class="hit"/></svg><div class="tip"></div>';
+    el.innerHTML = s;
+    var svg = el.querySelector('svg'), tip = el.querySelector('.tip'), band = svg.querySelector('#hoverband');
+    function at(ev){
+      var pt = ev.touches ? ev.touches[0] : ev, rect = svg.getBoundingClientRect();
+      var sx = (pt.clientX - rect.left) * (W / rect.width);
+      var i = Math.max(0, Math.min(n - 1, Math.floor((sx - L) / iw)));
+      var it = items[i];
+      band.setAttribute('x', L + i * iw); band.setAttribute('width', iw);
+      tip.innerHTML = '<b>' + nf(it.v) + ' ' + esc(opts.unit) + '</b><span>' + esc(it.full) + '</span>';
+      tip.style.left = ((L + i * iw + iw / 2) / W * rect.width) + 'px';
+      tip.style.top = ((H - B - (it.v / top) * (H - B - T)) / H * rect.height) + 'px';
+      tip.style.opacity = 1;
+    }
+    function out(){ tip.style.opacity = 0; band.setAttribute('width', 0); }
+    var hit = svg.querySelector('.hit');
+    hit.addEventListener('mousemove', at); hit.addEventListener('touchstart', at, {passive:true}); hit.addEventListener('touchmove', at, {passive:true});
+    hit.addEventListener('mouseleave', out); hit.addEventListener('touchend', function(){ setTimeout(out, 1200); });
+  }
+
+  /* ---------- barras horizontais ---------- */
+  function hbars(el, rows, labelFn, empty){
+    if(!rows.length || !rows.some(function(r){ return r.n > 0; })){ el.innerHTML = '<div class="empty">' + esc(empty) + '</div>'; return; }
+    var max = Math.max.apply(null, rows.map(function(r){ return r.n; }));
+    el.innerHTML = '<div class="hbars">' + rows.map(function(r){
+      return '<div class="hb"><div class="row"><span class="k">' + esc(labelFn(r.k)) + '</span><span class="n">' + nf(r.n) + '</span></div>' +
+             '<div class="track"><div class="fill" style="width:' + Math.max(1, r.n / max * 100) + '%"></div></div></div>';
+    }).join('') + '</div>';
+  }
+
+  var SRC = {direto:'Direto / sem origem', instagram:'Instagram', whatsapp:'WhatsApp', google:'Google', facebook:'Facebook', tiktok:'TikTok', 'x-twitter':'X / Twitter', bing:'Bing'};
+  var DEV = {mobile:'Celular', desktop:'Computador', tablet:'Tablet', '?':'Não identificado'};
+  var ACT = {pageview:'Visitou o site', click_event:'Clicou no ingresso', click_instagram:'Clicou no Instagram', click_whatsapp:'Clicou no WhatsApp', copy_coupon:'Copiou o cupom'};
+
+  function ago(iso){
+    var s = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
+    if(s < 60) return 'agora'; if(s < 3600) return 'há ' + Math.floor(s / 60) + ' min';
+    if(s < 86400) return 'há ' + Math.floor(s / 3600) + ' h'; return 'há ' + Math.floor(s / 86400) + ' d';
+  }
+
+  /* ---------- render ---------- */
+  function render(){
+    var t = data.totals || {}, days = dailySeries(), hours = hourlySeries(), per = parseInt($('period').value, 10);
+
+    // termômetro: última hora vs média por hora dos últimos 7 dias
+    var lh = t.last_hour || 0, avg = Number(t.avg_hour_7d || 0), on = t.online || 0, cls, label, txt;
+    if(!lh && !on){ cls = 'st-off'; label = 'PARADO'; }
+    else if(lh >= 3 && lh >= avg * 2){ cls = 'st-hot'; label = 'BOMBANDO'; }
+    else if(lh >= avg * 0.6){ cls = 'st-ok'; label = 'NORMAL'; }
+    else { cls = 'st-slow'; label = 'DEVAGAR'; }
+    $('thBadge').className = 'badge ' + cls; $('thBadge').textContent = label;
+    $('thTxt').innerHTML = '<b>' + nf(on) + '</b> ' + (on === 1 ? 'pessoa' : 'pessoas') + ' no site agora · <b>' + nf(lh) + '</b> visitas na última hora · média de <b>' + avg.toLocaleString('pt-BR') + '</b> por hora nos últimos 7 dias.';
+
+    var kp = [
+      ['Online agora', on, 'últimos 5 min'],
+      ['Visitas hoje', t.today, 'desde 00h'],
+      ['Visitantes únicos', t.visitors, 'nos últimos ' + per + ' dias'],
+      ['Visitas', t.views, 'nos últimos ' + per + ' dias'],
+      ['Cliques', t.clicks, (t.visitors ? (t.clicks / t.visitors).toLocaleString('pt-BR', {maximumFractionDigits: 1}) : '0') + ' por visitante'],
+      ['Cupom copiado', t.coupon, 'vezes']
+    ];
+    $('kpis').innerHTML = kp.map(function(k){ return '<div class="kpi"><div class="l">' + esc(k[0]) + '</div><div class="v">' + nf(k[1]) + '</div><div class="s">' + esc(k[2]) + '</div></div>'; }).join('');
+
+    $('subViews').textContent = nf(t.views) + ' visitas · ' + nf(t.visitors) + ' pessoas diferentes';
+    barChart($('chViews'), days.map(function(d){ return {v: d.views, x: fmtDay(d.key), full: fmtDay(d.key) + ' · ' + nf(d.visitors) + ' pessoas'}; }), {unit:'visitas', aria:'Visitas por dia'});
+    barChart($('chClicks'), days.map(function(d){ return {v: d.clicks, x: fmtDay(d.key), full: fmtDay(d.key)}; }), {unit:'cliques', aria:'Cliques por dia'});
+    barChart($('chHours'), hours.map(function(h){ return {v: h.views, x: h.label, full: 'às ' + h.label}; }), {unit:'visitas', aria:'Visitas por hora', every: 3});
+
+    hbars($('byEvent'), (data.by_event || []).map(function(r){ return {k: r.target, n: r.clicks}; }), function(k){ return names[k] || (k === 'proximo-evento' ? 'Card "Próximo evento"' : k); }, 'Nenhum clique em ingresso ainda.');
+    hbars($('sources'), (data.sources || []).map(function(r){ return {k: r.source, n: r.visits}; }), function(k){ return SRC[k] || k; }, 'Sem visitas no período.');
+    hbars($('devices'), (data.devices || []).map(function(r){ return {k: r.device, n: r.visits}; }), function(k){ return DEV[k] || k; }, 'Sem visitas no período.');
+    var c = data.contacts || {};
+    hbars($('contacts'), [{k:'WhatsApp', n: c.whatsapp || 0}, {k:'Instagram', n: c.instagram || 0}], function(k){ return k; }, 'Ninguém clicou nos contatos ainda.');
+
+    var f = data.recent || [];
+    $('feed').innerHTML = f.length ? f.map(function(r){
+      var what = ACT[r.type] || r.type, tg = r.type === 'click_event' ? ' · ' + (names[r.target] || r.target || '') : '';
+      var meta = [SRC[r.source] || r.source, DEV[r.device] || r.device].filter(Boolean).join(' · ');
+      return '<li><span class="t">' + esc(ago(r.created_at)) + '</span><span>' + esc(what + tg) + '</span><span class="d">' + esc(meta) + '</span></li>';
+    }).join('') : '<li><span class="empty">Nada por aqui ainda — assim que alguém abrir o site, aparece.</span></li>';
+
+    $('dailyTable').innerHTML = '<thead><tr><th>Dia</th><th>Visitas</th><th>Pessoas</th><th>Cliques</th></tr></thead><tbody>' +
+      days.slice().reverse().map(function(d){ return '<tr><td>' + fmtDay(d.key) + '</td><td>' + nf(d.views) + '</td><td>' + nf(d.visitors) + '</td><td>' + nf(d.clicks) + '</td></tr>'; }).join('') + '</tbody>';
+    $('foot').textContent = 'Os dados são anônimos (sem nome, e-mail ou IP). Suas próprias visitas não são contadas neste navegador.';
+  }
+
+  /* ---------- eventos de tela ---------- */
+  function startApp(){
+    show('app'); setLive(false, 'carregando…');
+    loadNames().then(refresh);
+    clearInterval(timer);
+    timer = setInterval(function(){ if(!document.hidden) refresh(); }, 15000);
+  }
+  function logout(){ clearSession(); clearInterval(timer); show('login'); }
+
+  $('loginForm').addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var b = $('loginBtn'); b.disabled = true; $('loginErr').textContent = '';
+    authCall('password', {email: $('email').value.trim(), password: $('pass').value}).then(function(j){
+      saveSession(j); $('pass').value = ''; startApp();
+    }).catch(function(e){
+      $('loginErr').textContent = (e && (e.error_code === 'invalid_credentials' || e.error === 'invalid_grant')) ? 'E-mail ou senha incorretos.' : 'Não foi possível entrar. Verifique a conexão e o config.js.';
+    }).then(function(){ b.disabled = false; });
+  });
+  $('logoutBtn').addEventListener('click', logout);
+  $('refreshBtn').addEventListener('click', refresh);
+  $('period').addEventListener('change', function(){ lastSig = null; refresh(); });
+  var rz; window.addEventListener('resize', function(){ clearTimeout(rz); rz = setTimeout(function(){ if(data) render(); }, 200); });
+  document.addEventListener('visibilitychange', function(){ if(!document.hidden && session) refresh(); });
+  document.querySelector('[data-table]').addEventListener('click', function(){ $('tableCard').hidden = false; $('tableCard').scrollIntoView({behavior:'smooth'}); });
+  $('tableClose').addEventListener('click', function(){ $('tableCard').hidden = true; });
+
+  /* ---------- início ---------- */
+  if(!configured){ show('login'); $('cfgNote').hidden = false; $('loginBtn').disabled = true; return; }
+  var rt = null; try{ rt = localStorage.getItem('beon_admin_rt'); }catch(e){}
+  if(rt){ ensureToken().then(startApp).catch(function(){ show('login'); }); } else { show('login'); }
+})();
+</script>
+</body>
+</html>
