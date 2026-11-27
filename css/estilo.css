@@ -591,3 +591,30 @@ footer .social-links a:active{transform:scale(var(--press-scale)) !important;}
 /* ♥ ao favoritar: um "pop" curto confirma que salvou */
 .fav-btn.pop{animation:fav-pop 280ms var(--ease-out);}
 @keyframes fav-pop{0%{transform:scale(.8);} 55%{transform:scale(1.18);} 100%{transform:scale(1);}}
+
+/* EM BREVE (aparece sozinho quando não há próximos eventos) */
+section.soon{padding:20px 0 30px;}
+.soon-card{
+  position:relative; display:flex; align-items:center; gap:28px; overflow:hidden;
+  background:var(--card); border:1px solid var(--accent); border-radius:10px;
+  padding:36px; box-shadow:0 0 60px -18px #ff1a3c66;
+}
+.soon-year{
+  font-size:clamp(96px, 16vw, 190px); line-height:.85; flex-shrink:0;
+  background:var(--gradient); -webkit-background-clip:text; background-clip:text; color:transparent;
+  animation:soonPulse 2.4s ease-in-out infinite;
+}
+@keyframes soonPulse{0%,100%{opacity:.85; filter:drop-shadow(0 0 0 #ff1a3c00);}50%{opacity:1; filter:drop-shadow(0 0 22px #ff1a3c88);}}
+@media (prefers-reduced-motion: reduce){.soon-year{animation:none;}}
+.soon-body{display:flex; flex-direction:column; gap:14px; flex:1; min-width:0;}
+.soon-body h3{font-size:38px; letter-spacing:0.02em; line-height:1.05;}
+.soon-text{color:var(--text-dim); font-size:15px; max-width:620px;}
+.soon-text b{color:var(--text);}
+.soon-note{color:var(--accent3); font-size:12px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; margin-top:-8px;}
+.soon-actions{display:flex; gap:16px; align-items:center; flex-wrap:wrap;}
+.soon-actions .buy-btn{margin-top:0; padding:14px 30px;}
+.soon-link{color:var(--text); font-weight:600; font-size:14px; border-bottom:1px solid var(--accent);}
+@media (max-width: 860px){
+  .soon-card{flex-direction:column; align-items:flex-start; padding:26px 22px; gap:10px;}
+  .soon-body h3{font-size:32px;}
+}
