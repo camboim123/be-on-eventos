@@ -147,7 +147,7 @@ function copyCode(){
 
   if(!upcoming.length){
     if(nextSection) nextSection.hidden = true;
-    showSoon(now);
+    showSoon();
   } else (function(){
 
   /* ---------- Próximo evento: o mais próximo que ainda tem ingresso ---------- */
@@ -202,29 +202,10 @@ function copyCode(){
   if(start > Date.now()) timer = setInterval(tick, 1000);
   })();
 
-  /* ---------- Em breve: sem próximos eventos, mostra o aviso de 2027 com contagem para o ano novo ---------- */
-  function showSoon(base){
+  /* ---------- Em breve: sem próximos eventos, mostra o aviso de novos anúncios ---------- */
+  function showSoon(){
     var soon = document.getElementById('soon');
-    if(!soon) return;
-    soon.hidden = false;
-    var target = new Date('2027-01-01T00:00:00' + TZ).getTime();
-    var offset = base - Date.now(); // diferente de 0 só no modo de teste (?agora=)
-    var box = document.getElementById('soonCountdown'), note = document.getElementById('soonNote');
-    var d = document.getElementById('soon-days'), h = document.getElementById('soon-hours');
-    var m = document.getElementById('soon-min'), sc = document.getElementById('soon-sec');
-    function pad(x){ return String(x).padStart(2, '0'); }
-    function tick(){
-      var diff = target - (Date.now() + offset);
-      if(diff <= 0){
-        box.hidden = true; note.textContent = '2027 chegou — novos eventos a caminho';
-        clearInterval(t); return;
-      }
-      d.textContent = Math.floor(diff / (24 * HOUR));
-      h.textContent = pad(Math.floor((diff % (24 * HOUR)) / HOUR));
-      m.textContent = pad(Math.floor((diff % HOUR) / 60000));
-      sc.textContent = pad(Math.floor((diff % 60000) / 1000));
-    }
-    var t = setInterval(tick, 1000); tick();
+    if(soon) soon.hidden = false;
   }
 
   /* ---------- Favoritos (guardados no navegador) ---------- */
